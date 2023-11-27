@@ -8,7 +8,7 @@
 1. Убедись что на компьютере установлена LTS-версия Node.js.
    [Скачай и установи](https://nodejs.org/en/) её если необходимо.
 2. Склонируй этот репозиторий.
-3. Измени имя папки с `parcel-project-template` на имя своего проекта.
+3. Измени имя папки с `parcel-project-template` на имя своего проекта. vhmb j
 4. Создай новый пустой репозиторий на GitHub.
 5. Открой проект в VSCode, запусти терминал и свяжи проект с GitHub-репозиторием
    [по инструкции](https://docs.github.com/en/get-started/getting-started-with-git/managing-remote-repositories#changing-a-remote-repositorys-url).
