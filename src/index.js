@@ -4,6 +4,7 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.css';
 
 const refs = {
+  searchForm: document.querySelector('.search-form'),
   searchInput: document.querySelector('input'),
   gallery: document.querySelector('.gallery'),
   loadMore: document.querySelector('.load-more'),
@@ -11,7 +12,9 @@ const refs = {
   page: 0,
 };
 
-document.addEventListener('submit', handleSubmit);
+const gallery = new SimpleLightbox('.photo-card a');
+
+refs.searchForm.addEventListener('submit', handleSubmit);
 refs.loadMore.addEventListener('click', handleSubmit);
 refs.searchInput.addEventListener('input', handleInputChange);
 
@@ -42,10 +45,12 @@ async function searchImages(request) {
     );
     const images = response.data.hits;
 
-    if (refs.page === 1) {
-      Notiflix.Notify.success(
-        `Hooray! We found ${response.data.totalHits} images.`
-      );
+    if (images.length !== 0) {
+      if (refs.page === 1) {
+        Notiflix.Notify.success(
+          `Hooray! We found ${response.data.totalHits} images.`
+        );
+      }
     }
 
     if (images.length === 0) {
@@ -83,11 +88,13 @@ async function searchImages(request) {
       refs.gallery.appendChild(div);
     });
 
-    const gallery = new SimpleLightbox('.photo-card a');
+    gallery.refresh();
+
+    if (images.length === 40) {
+      refs.loadMore.style.display = 'block';
+    }
   } catch (error) {
     console.error(error);
     throw new Error('Error found');
-  } finally {
-    refs.loadMore.style.display = 'block';
   }
 }
