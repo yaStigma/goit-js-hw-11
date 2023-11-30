@@ -40,7 +40,7 @@ function handleSubmit(e) {
 
 async function searchImages(request) {
   try {
-    // refs.loadMore.style.display = 'none';
+   
     refs.page += 1;
     const response = await axios.get(
       `https://pixabay.com/api/?key=${refs.apiKey}&q=${request}&image_type=photo&orientation=horizontal&safesearch=true&page=${refs.page}&per_page=40`
