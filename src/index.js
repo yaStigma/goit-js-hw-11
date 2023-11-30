@@ -10,17 +10,25 @@ const refs = {
   loadMore: document.querySelector('.load-more'),
   apiKey: '40912309-48da47788ffd5e56fff0d133f',
   page: 0,
+  previousSearchValue: '',
 };
 
 const gallery = new SimpleLightbox('.photo-card a');
 
 refs.searchForm.addEventListener('submit', handleSubmit);
 refs.loadMore.addEventListener('click', handleSubmit);
-refs.searchInput.addEventListener('input', handleInputChange);
 
 function handleSubmit(e) {
   e.preventDefault();
+
   const query = refs.searchInput.value.toLowerCase();
+
+  if (query !== refs.previousSearchValue) {
+    refs.gallery.innerHTML = '';
+    refs.loadMore.style.display = 'none';
+    refs.page = 0;
+    refs.previousSearchValue = query;
+  }
 
   if (query === '') {
     Notiflix.Notify.warning('Please enter your search query');
@@ -30,15 +38,9 @@ function handleSubmit(e) {
   searchImages(query);
 }
 
-function handleInputChange() {
-  refs.gallery.innerHTML = '';
-  refs.page = 0;
-  refs.loadMore.style.display = 'none';
-}
-
 async function searchImages(request) {
   try {
-    refs.loadMore.style.display = 'none';
+    // refs.loadMore.style.display = 'none';
     refs.page += 1;
     const response = await axios.get(
       `https://pixabay.com/api/?key=${refs.apiKey}&q=${request}&image_type=photo&orientation=horizontal&safesearch=true&page=${refs.page}&per_page=40`
@@ -90,7 +92,14 @@ async function searchImages(request) {
 
     gallery.refresh();
 
-    if (images.length === 40) {
+    if (
+      refs.page ===
+      Math.ceil(response.data.totalHits / response.data.hits.length)
+    ) {
+      refs.loadMore.style.display = 'none';
+      Notiflix.Notify.warning('Sorry, you reached the end of collection');
+      return;
+    } else {
       refs.loadMore.style.display = 'block';
     }
   } catch (error) {
